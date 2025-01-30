@@ -11,25 +11,83 @@ let expenses = [];
 let chart;
 let chartType = "bar";
 let income = 0;
+let lastRequestTime = 0;
+const requestInterval = 2000;
+let retrying = false;
 
-async function fetchFinancialAdvice(totalAmount, budgetLimit) {
-  const apiUrl = "https://api.openai.com/v1/completions"; 
-  
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      totalAmount: totalAmount,
-      budgetLimit: budgetLimit,
-      expenses: expenses
-    })
-  });
+async function askFinancialAI() {
+  const now = Date.now();
 
-  const data = await response.json();
-  return data.advice;  
+  if (now - lastRequestTime < requestInterval || isRetrying) {
+    alert("You are sending requests too quickly. Please wait a moment and try again.");
+    return;
+  }
+  lastRequestTime = now;
+
+  const userInput = document.getElementById("user-input").value;
+  console.log("User input:", userInput);
+
+  if (!userInput) return alert("Please enter a question!");
+
+  const chatWindow = document.getElementById("chat-window");
+
+  chatWindow.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+  const loaderMessage = document.createElement("p");
+  loaderMessage.innerHTML = `<strong>AI:</strong> <span class="dots">...</span>`;
+  chatWindow.appendChild(loaderMessage);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+
+  const apiKey = "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";
+  const apiUrl = `https://api.openai.com/v1/chat/completions`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+       body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: userInput }],
+      }),
+    });
+
+    if (response.status === 429) {
+      const retryAfter = response.headers.get("Retry-After") || 2; 
+      alert(`Rate limit exceeded. Retrying in ${retryAfter} seconds...`);
+      retrying = true;
+
+      setTimeout(() => {
+        retrying = false; 
+      }, retryAfter * 1000);
+
+      loaderMessage.remove();
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(`API returned status ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const aiResponse = data.choices?.[0]?.message?.content || "No response from AI.";
+    
+    loaderMessage.remove();
+
+    chatWindow.innerHTML += `<p><strong>AI:</strong> ${aiResponse}</p>`;
+    document.getElementById("user-input").value = "";
+  } catch (error) {
+    console.error("Error fetching AI response:", error);
+
+    loaderMessage.remove();
+
+    chatWindow.innerHTML += `<p><strong>AI:</strong> Sorry, I couldn't fetch an answer. Please try again later.</p>`;
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
 }
+
 
 function addExpense(event) {
   event.preventDefault();
@@ -96,7 +154,6 @@ function setBudget() {
     return;
   }
 
-  // Display the budget set and generate advice
   generateAIAdvice();
   checkBudget();
 }
@@ -112,6 +169,8 @@ function checkBudget() {
     budgetAlert.textContent = "";
   }
 }
+
+
 
 function updateChart(type = chartType) {
   const categoryTotals = expenses.reduce((totals, expense) => {
@@ -144,19 +203,6 @@ document.getElementById("doughnutChart").addEventListener("click", () => updateC
 
 expenseForm.addEventListener("submit", addExpense);
 
-async function generateAIAdvice() {
-  const totalAmount = parseFloat(totalAmountElement.textContent);
-  const budgetLimit = parseFloat(document.getElementById("budget-limit").value);
-  const aiAdviceElement = document.getElementById("ai-advice");
-
-  if (totalAmount > budgetLimit) {
-    const advice = await fetchFinancialAdvice(totalAmount, budgetLimit);
-    aiAdviceElement.textContent = advice || "You have exceeded your budget. Consider cutting down on non-essential expenses.";
-  } else {
-    aiAdviceElement.textContent = "You're within budget. Keep up the good work!";
-  }
-}
-
 // ** Taxes Calculator and Tour Guide Logic **
 
 incomeInput.addEventListener("input", () => {
@@ -169,7 +215,6 @@ function calculateTaxes() {
   const taxableIncome = income - totalExpenses;
   let estimatedTaxes = 0;
 
-  // Assuming a simple tax rate of 25% for the example (modify as needed)
   if (taxableIncome > 0) {
     estimatedTaxes = taxableIncome * 0.25;
   }
@@ -188,13 +233,9 @@ function updateTaxGuide() {
 }
 
 function getDeductionsAndCredits() {
-  // Add possible deductions or credits based on user expenses, income, etc.
-  // For example, medical expenses, donations, education credits, etc.
-  // You can modify this logic as needed.
 
   let deductions = [];
 
-  // Example deductions (modify with real-life logic as needed)
   if (expenses.some(exp => exp.category === "Medical")) {
     deductions.push("Medical Expenses");
   }
