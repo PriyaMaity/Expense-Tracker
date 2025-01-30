@@ -1,4 +1,5 @@
 # Expense Tracker
+Hosted Link: <p>https://expense-tracker-git-main-priyamaitys-projects.vercel.app/</p>
 
 This is an **Expense Tracker** web application built using HTML, CSS, and JavaScript. It allows users to create an account, log in, and track their expenses with categories such as Food, Transport, Entertainment, and more. Users can add, view, and manage their expenses. The application uses **localStorage** for data persistence.
 
@@ -30,15 +31,14 @@ Ensure you have a modern web browser such as **Google Chrome**, **Mozilla Firefo
 
 1. **Clone the repository**:
 
-```bash
-git clone https://github.com/yourusername/expense-tracker.git
-```
+bash
+git clone [https://github.com/PriyaMaity/Expense-Tracker]
+
 
 2. **Navigate into the project directory**:
 
-```bash
+bash
 cd expense-tracker
-```
 
 3. Open the `index.html` file in your browser.
 
