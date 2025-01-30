@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="image-container">
+      <img src="/Images/image1.jpg" alt="">
+      <img src="/Images/image2.jpg" alt="">
+      <img src="/Images/image3.jpg" alt="">
+      <img src="/Images/image4.jpg" alt="">
+      <img src="/Images/image5.jpg" alt="">
+    </div>
+    <div class="signup-box">
+      <a href="/index.html" class="back-arrow">←</a>
+      <h2>Create Account</h2>
+      <p>Please fill the input below here</p>
+      <form>
+        <div class="input-box">
+          <input type="text" placeholder="Full Name" id="fullName">
+          <img src="/Images/user-icon.png" alt="User Icon">
+        </div>
+        <div class="input-box">
+          <input type="tel" placeholder="Phone" id="phnNum">
+          <img src="/Images/phone-icon.png" alt="Phone Icon">
+        </div>
+        <div class="input-box">
+          <input type="email" placeholder="Email" id="signupEmail">
+          <img src="/Images/email.png" alt="Email Icon">
+        </div>
+        <div class="input-box">
+          <input type="password" placeholder="Password" id="signupPassword">
+          <img src="/Images/password.png" alt="Password Icon">
+        </div>
+        <div class="input-box">
+          <input type="password" placeholder="Confirm Password" id="signupConfirmPassword">
+          <img src="/Images/confirm-psswrd.jfif" alt="Confirm Password Icon">
+        </div>
+        <p class="error-message" id="signupError"></p>
+        <button type="submit" class="btn">Sign Up</button>
+        <p>Already have an account? <a href="/index.html">Log in</a></p>
+      </form>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: lightpink; 
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  width: 65%;
+  display: flex;
+  gap: 2rem;
+  background: rgb(230, 129, 146);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+.animated-imgs{
+  width: 50%;
+}
+.login-box{
+  width: 50%;
+}
+.image-container {
+  width: 350px;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: fadeInOut 20s infinite;
+}
+
+.image-container img:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.image-container img:nth-child(2) {
+  animation-delay: 4s;
+}
+
+.image-container img:nth-child(3) {
+  animation-delay: 8s;
+}
+.image-container img:nth-child(4) {
+  animation-delay: 12s;
+}
+.image-container img:nth-child(5) {
+  animation-delay: 16s;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+p{
+  color: white;
+}
+
+h2 {
+  margin: 10px 0;
+  font-size: 24px;
+}
+
+p {
+  font-size: 14px;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(174, 4, 32); /* Teal */
+}
+
+/* Input Boxes */
+.input-box {
+  position: relative;
+  margin: 15px 0;
+}
+
+.input-box input {
+  width: 75%;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  color: black;
+  font-size: 14px;
+}
+
+.input-box img {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  width: 20px;
+}
+
+/* Buttons */
+.btn {
+  width: 30%;
+  padding: 12px;
+  background: rgb(238, 94, 118); 
+  border: none;
+  border-radius: 10px;
+  color: white; 
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: rgb(194, 72, 92);
+}
+
+/* Links */
+.forgot-password {
+  display: block;
+  margin-top: 10px;
+  color: white;
+  font-size: 12px;
+}
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image-container {
+    width: 90%;
+    height: 200px;
+  }
+
+  .login-box {
+    width: 80%;
+    max-width: 400px;
+  }
+  
+  .input-box input {
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+
+  .container {
+    padding: 15px;
+    gap: 1rem;
+  }
+  
+  .input-box input {
+    width: 65%;
+  }
+  .image-container img {
+    animation-duration: 16s; /* Speed up the image transition for smaller screens */
+  }
+}
