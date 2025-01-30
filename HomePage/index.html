@@ -86,11 +86,15 @@
         <canvas id="expenseChart"></canvas>
       </div>
 
-      <div class="ai-chat-container">
+      <div id="chat-container">
         <h3>AI Financial Advisor</h3>
-        <div id="chat-window"></div>
-        <input type="text" id="user-input" placeholder="Ask a financial question...">
-        <button onclick="askFinancialAI()" id="ask-ai-button">Ask AI</button>
+        <div id="chat-output">
+          <!-- Chat messages will appear here -->
+        </div>
+        <div id="chat-input-container">
+          <input type="text" id="chat-input" placeholder="Type a message..." />
+          <button id="send-button">Send</button>
+        </div>
       </div>
     </div><br>
     <hr><br>

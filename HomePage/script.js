@@ -11,84 +11,62 @@ let expenses = [];
 let chart;
 let chartType = "bar";
 let income = 0;
-let lastRequestTime = 0;
-const requestInterval = 2000;
-let retrying = false;
 
-async function askFinancialAI() {
-  const now = Date.now();
+const chatInput = document.getElementById("chat-input");
+const chatOutput = document.getElementById("chat-output");
+const sendButton = document.getElementById("send-button");
 
-  if (now - lastRequestTime < requestInterval || isRetrying) {
-    alert("You are sending requests too quickly. Please wait a moment and try again.");
+const predefinedResponses = {
+  "hello": "Hi there! How can I assist you today?",
+  "how are you": "I'm just a bot, but I'm doing great! How about you?",
+  "what is your name": "I am your friendly assistant bot.",
+  "bye": "Goodbye! Have a great day!",
+  "budgeting": "A good budget helps you track your income and expenses. Start by listing your monthly expenses and income, then allocate funds to savings and discretionary spending. Make sure to stick to it.",
+  "saving tips": "To start saving, set a goal and automate your savings. Even small amounts add up over time. Consider creating an emergency fund, saving at least 3-6 months of living expenses.",
+  "investing": "Investing can help you grow your wealth. Consider starting with low-cost index funds or exchange-traded funds (ETFs). Remember to diversify your investments to reduce risk.",
+  "taxes": "To optimize your tax situation, keep track of your expenses and look for potential deductions. Consider contributing to tax-advantaged accounts like IRAs or 401(k)s. Tax preparation software or a professional tax advisor can help you get the best outcome.",
+  "debt": "If you have debt, focus on paying off high-interest debt first, like credit cards. Consider consolidating loans or refinancing to lower your interest rates. Aim to pay off your debt systematically.",
+  "emergency fund": "Building an emergency fund is essential. It’s recommended to save 3 to 6 months of living expenses in an easily accessible savings account for unexpected situations like medical emergencies or job loss.",
+  "default": "Sorry, I didn't understand that. Can you rephrase?"
+};
+
+function getChatbotResponse(input) {
+  const lowercasedInput = input.toLowerCase().trim();
+  if (predefinedResponses[lowercasedInput]) {
+    return predefinedResponses[lowercasedInput];
+  }
+    return predefinedResponses["default"];
+  }
+
+function handleChat() {
+  const userInput = chatInput.value;
+  if (!userInput.trim()) {
     return;
   }
-  lastRequestTime = now;
 
-  const userInput = document.getElementById("user-input").value;
-  console.log("User input:", userInput);
+const userMessageElement = document.createElement("div");
+  userMessageElement.classList.add("user-message");
+  userMessageElement.textContent = `You: ${userInput}`;
+  chatOutput.appendChild(userMessageElement);
 
-  if (!userInput) return alert("Please enter a question!");
+const botResponse = getChatbotResponse(userInput);
 
-  const chatWindow = document.getElementById("chat-window");
+const botMessageElement = document.createElement("div");
+botMessageElement.classList.add("bot-message");
+botMessageElement.textContent = `Bot: ${botResponse}`;
+chatOutput.appendChild(botMessageElement);
 
-  chatWindow.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
-
-  const loaderMessage = document.createElement("p");
-  loaderMessage.innerHTML = `<strong>AI:</strong> <span class="dots">...</span>`;
-  chatWindow.appendChild(loaderMessage);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-
-  const apiKey = "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";
-  const apiUrl = `https://api.openai.com/v1/chat/completions`;
-
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: userInput }],
-      }),
-    });
-
-    if (response.status === 429) {
-      const retryAfter = response.headers.get("Retry-After") || 2; 
-      alert(`Rate limit exceeded. Retrying in ${retryAfter} seconds...`);
-      retrying = true;
-
-      setTimeout(() => {
-        retrying = false; 
-      }, retryAfter * 1000);
-
-      loaderMessage.remove();
-      return;
-    }
-
-    if (!response.ok) {
-      throw new Error(`API returned status ${response.status}: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const aiResponse = data.choices?.[0]?.message?.content || "No response from AI.";
-    
-    loaderMessage.remove();
-
-    chatWindow.innerHTML += `<p><strong>AI:</strong> ${aiResponse}</p>`;
-    document.getElementById("user-input").value = "";
-  } catch (error) {
-    console.error("Error fetching AI response:", error);
-
-    loaderMessage.remove();
-
-    chatWindow.innerHTML += `<p><strong>AI:</strong> Sorry, I couldn't fetch an answer. Please try again later.</p>`;
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
+chatOutput.scrollTop = chatOutput.scrollHeight;
+chatInput.value = "";
 }
 
+sendButton.addEventListener("click", handleChat);
 
+chatInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    handleChat();
+  }
+});
 function addExpense(event) {
   event.preventDefault();
 
