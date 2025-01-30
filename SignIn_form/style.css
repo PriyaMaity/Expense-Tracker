@@ -172,8 +172,12 @@ a {
   
   .input-box input {
     width: 100%;
+    margin-left: -2rem;
   }
 
+  .input-box img{
+    left: -30px;
+  }
   .btn {
     width: 100%;
   }
@@ -208,5 +212,12 @@ a {
   }
   .image-container img {
     animation-duration: 16s; /* Speed up the image transition for smaller screens */
+  }
+  .input-box input{
+    margin-left: -1.5rem;
+    width: 85%;
+  }
+  .input-box img{
+    left: -24px;
   }
 }
